@@ -63,39 +63,47 @@ const loginAdmin = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+  <!-- Background hitam pekat ala Twitter/X -->
+  <div class="min-h-screen bg-black flex flex-col justify-center items-center p-4 font-sans selection:bg-blue-500 selection:text-white">
+    <!-- Card transparan dengan border tipis -->
+    <div class="w-full max-w-md bg-black rounded-2xl border border-neutral-800 p-8 sm:p-10">
 
+      <!-- Header -->
       <div class="text-center mb-8">
-        <h1 class="text-2xl font-bold text-slate-800">Campus Lost & Found</h1>
-        <p class="text-sm text-slate-500 mt-1">Sistem Informasi Pengamanan Barang Hilang</p>
+        <!-- Logo/Judul -->
+        <h1 class="text-3xl font-bold text-white tracking-tight">Campus Lost & Found</h1>
+        <p class="text-sm text-neutral-500 mt-2">Sistem Informasi Pengamanan Barang Hilang</p>
       </div>
 
-      <div class="flex p-1 bg-slate-100 rounded-xl mb-6">
+      <!-- Custom Tabs -->
+      <div class="flex p-1 bg-neutral-900 rounded-xl mb-8">
         <button
           @click="activeTab = 'mahasiswa'; errorMessage = ''"
-          :class="activeTab === 'mahasiswa' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600'"
-          class="flex-1 py-2.5 text-sm font-medium rounded-lg transition-all"
+          :class="activeTab === 'mahasiswa' ? 'bg-black text-white shadow-sm border border-neutral-700' : 'text-neutral-500 hover:text-gray-300'"
+          class="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200"
         >Mahasiswa</button>
         <button
           @click="activeTab = 'akademik'; errorMessage = ''"
-          :class="activeTab === 'akademik' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600'"
-          class="flex-1 py-2.5 text-sm font-medium rounded-lg transition-all"
+          :class="activeTab === 'akademik' ? 'bg-black text-white shadow-sm border border-neutral-700' : 'text-neutral-500 hover:text-gray-300'"
+          class="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200"
         >Akademik</button>
       </div>
 
-      <div v-if="errorMessage" class="mb-4 p-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm rounded-r-lg">
+      <!-- Pesan Error -->
+      <div v-if="errorMessage" class="mb-6 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-sm rounded-xl text-center">
         {{ errorMessage }}
       </div>
 
+      <!-- Tampilan Login Mahasiswa -->
       <div v-if="activeTab === 'mahasiswa'" class="text-center space-y-6">
-        <p class="text-sm text-slate-600">Masuk dengan akun Google kampus <strong>@global.ac.id</strong> untuk verifikasi identitas.</p>
+        <p class="text-sm text-neutral-400">Masuk dengan akun Google kampus <strong class="text-white">@global.ac.id</strong> untuk verifikasi identitas.</p>
+        
+        <!-- Tombol Google High Contrast -->
         <button
           @click="loginGoogle"
           :disabled="loading"
-          class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 font-medium py-3 border border-slate-200 rounded-xl shadow-sm transition-all disabled:opacity-50"
+          class="w-full flex items-center justify-center gap-3 bg-white hover:bg-neutral-200 text-black font-bold py-3.5 px-4 rounded-full transition-all duration-200 disabled:opacity-50"
         >
-          <!-- Google Icon SVG -->
           <svg v-if="!loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5">
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -107,10 +115,15 @@ const loginAdmin = async () => {
         </button>
       </div>
 
-      <form v-else @submit.prevent="loginAdmin" class="space-y-4">
-        <input v-model="adminEmail" type="email" placeholder="Email Admin" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" required />
-        <input v-model="adminPassword" type="password" placeholder="Password" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm" required />
-        <button type="submit" :disabled="loading" class="w-full bg-slate-800 text-white font-medium py-2.5 rounded-xl text-sm">
+      <!-- Tampilan Login Admin -->
+      <form v-else @submit.prevent="loginAdmin" class="space-y-5">
+        <div>
+          <input v-model="adminEmail" type="email" placeholder="Email Admin" class="w-full px-4 py-3.5 bg-black border border-neutral-700 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm" required />
+        </div>
+        <div>
+          <input v-model="adminPassword" type="password" placeholder="Password" class="w-full px-4 py-3.5 bg-black border border-neutral-700 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm" required />
+        </div>
+        <button type="submit" :disabled="loading" class="w-full bg-white hover:bg-neutral-200 text-black font-bold py-3.5 rounded-full transition-all duration-200 text-sm mt-2">
           {{ loading ? 'Mengecek...' : 'Masuk Sebagai Admin' }}
         </button>
       </form>
