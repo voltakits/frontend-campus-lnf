@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
-  apiKey: "AIzaSybbbbbhoiijkiCAEqQXkG-MxPgGkWH2sv_maqqxZw-10F8",
+  apiKey: "AIzaSyCAEqQXkG-MxPgGkWH2sv_maqqxZw-10F8",
   authDomain: "campus-lost-and-found-9b3c9.firebaseapp.com",
   projectId: "campus-lost-and-found-9b3c9",
   storageBucket: "campus-lost-and-found-9b3c9.firebasestorage.app",
