@@ -22,7 +22,6 @@ const loginGoogle = async () => {
 
     // Validasi domain di frontend
     if (!email.endsWith('@global.ac.id')) {
-      await auth.signOut()
       throw new Error('Akses ditolak! Gunakan email mahasiswa @global.ac.id')
     }
 
@@ -30,7 +29,7 @@ const loginGoogle = async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login-google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // ← PENTING biar cookie auth_token tersimpan
+      credentials: 'include',
       body: JSON.stringify({ email })
     })
 
@@ -41,7 +40,12 @@ const loginGoogle = async () => {
     router.push('/dashboard-mahasiswa')
 
   } catch (error) {
-    errorMessage.value = error.message
+    // CEGAT ERROR KALAU POPUP DI-CLOSE
+    if (error.code === 'auth/popup-closed-by-user') {
+      errorMessage.value = 'Login dibatalkan. Silakan pilih akun Anda.'
+    } else {
+      errorMessage.value = error.message
+    }
     await auth.signOut()
   } finally {
     loading.value = false
@@ -63,19 +67,14 @@ const loginAdmin = async () => {
 </script>
 
 <template>
-  <!-- Background hitam pekat ala Twitter/X -->
   <div class="min-h-screen bg-black flex flex-col justify-center items-center p-4 font-sans selection:bg-blue-500 selection:text-white">
-    <!-- Card transparan dengan border tipis -->
     <div class="w-full max-w-md bg-black rounded-2xl border border-neutral-800 p-8 sm:p-10">
 
-      <!-- Header -->
       <div class="text-center mb-8">
-        <!-- Logo/Judul -->
         <h1 class="text-3xl font-bold text-white tracking-tight">Campus Lost & Found</h1>
         <p class="text-sm text-neutral-500 mt-2">Sistem Informasi Pengamanan Barang Hilang</p>
       </div>
 
-      <!-- Custom Tabs -->
       <div class="flex p-1 bg-neutral-900 rounded-xl mb-8">
         <button
           @click="activeTab = 'mahasiswa'; errorMessage = ''"
@@ -89,16 +88,13 @@ const loginAdmin = async () => {
         >Akademik</button>
       </div>
 
-      <!-- Pesan Error -->
       <div v-if="errorMessage" class="mb-6 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-sm rounded-xl text-center">
         {{ errorMessage }}
       </div>
 
-      <!-- Tampilan Login Mahasiswa -->
       <div v-if="activeTab === 'mahasiswa'" class="text-center space-y-6">
         <p class="text-sm text-neutral-400">Masuk dengan akun Google kampus <strong class="text-white">@global.ac.id</strong> untuk verifikasi identitas.</p>
         
-        <!-- Tombol Google High Contrast -->
         <button
           @click="loginGoogle"
           :disabled="loading"
@@ -115,7 +111,6 @@ const loginAdmin = async () => {
         </button>
       </div>
 
-      <!-- Tampilan Login Admin -->
       <form v-else @submit.prevent="loginAdmin" class="space-y-5">
         <div>
           <input v-model="adminEmail" type="email" placeholder="Email Admin" class="w-full px-4 py-3.5 bg-black border border-neutral-700 text-white placeholder-neutral-500 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm" required />
