@@ -6,121 +6,62 @@ import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
 
 const router = useRouter()
 
-// State Tabs
+// State UI
 const activeTab = ref('mahasiswa')
-
-// State Mahasiswa (2FA Flow: Google -> OTP)
-const step = ref(1) // 1: Tombol Google, 2: Input OTP
-const emailMahasiswa = ref('')
-const otpCode = ref('')
-
-// State Admin Akademik
 const adminEmail = ref('')
 const adminPassword = ref('')
-
-// State UI Global
 const errorMessage = ref('')
-const successMessage = ref('')
 const loading = ref(false)
 
 // ---------------------------------------------
-// FUNGSI MAHASISWA STEP 1: LOGIN GOOGLE & REQUEST OTP
+// FUNGSI LOGIN GOOGLE (Domain-Based Auth)
 // ---------------------------------------------
-const loginGoogleAndRequestOTP = async () => {
+const loginGoogle = async () => {
   errorMessage.value = ''
-  successMessage.value = ''
   loading.value = true
 
   try {
-    // 1. Munculkan pop-up Google
+    // 1. Login via Google
     const result = await signInWithPopup(auth, googleProvider)
-    const user = result.user
+    const email = result.user.email
 
-    emailMahasiswa.value = user.email
+    // 2. Validasi Domain di Frontend (Filter Awal)
+    if (!email.endsWith('@global.ac.id')) {
+      throw new Error('Akses ditolak! Gunakan email mahasiswa @global.ac.id')
+    }
 
-    // 2. Tembak API Express untuk kirim OTP ke email tersebut
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/request-otp`, {
+    // 3. Tembak ke Backend untuk registrasi/login
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login-google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: emailMahasiswa.value })
+      body: JSON.stringify({ email })
     })
     
     const data = await res.json()
-    if (!res.ok) throw new Error(data.error || 'Gagal mengirim OTP ke email Google')
+    if (!res.ok) throw new Error(data.error || 'Login gagal.')
     
-    // 3. Pindah ke layar input OTP
-    successMessage.value = `Login Google berhasil. OTP dikirim ke ${emailMahasiswa.value}`
-    step.value = 2 
-
-    // Sign out dari Firebase UI karena kita pakai custom JWT dari Express
-    await auth.signOut() 
-
-  } catch (error) {
-    errorMessage.value = error.message || 'Gagal terhubung dengan Google.'
-  } finally {
-    loading.value = false
-  }
-}
-
-// ---------------------------------------------
-// FUNGSI MAHASISWA STEP 2: VERIFIKASI OTP
-// ---------------------------------------------
-const verifyOTP = async () => {
-  errorMessage.value = ''
-  if (!otpCode.value || otpCode.value.length !== 6) {
-    errorMessage.value = 'Masukkan 6 digit kode OTP dengan benar!'
-    return
-  }
-
-  loading.value = true
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <--- PENTING: Wajib ada biar browser nerima set-cookie dari backend
-      body: JSON.stringify({ email: emailMahasiswa.value, otpCode: otpCode.value })
-    })
-    
-    const data = await res.json()
-    
-    if (!res.ok) throw new Error(data.error || 'OTP Salah!')
-    
-    // Cuma simpan data user, token sudah di-handle oleh cookie
     localStorage.setItem('user', JSON.stringify(data.user))
-    
-    successMessage.value = 'Verifikasi sukses! Mengalihkan ke dashboard...'
-    
-    setTimeout(() => router.push('/dashboard-mahasiswa'), 1000)
-    
+    router.push('/dashboard-mahasiswa')
+
   } catch (error) {
     errorMessage.value = error.message
+    await auth.signOut() // Logout paksa jika domain salah atau backend error
   } finally {
     loading.value = false
   }
 }
 
 // ---------------------------------------------
-// FUNGSI ADMIN AKADEMIK: LOGIN FIREBASE (ATAU EXPRESS)
+// FUNGSI ADMIN AKADEMIK
 // ---------------------------------------------
 const loginAdmin = async () => {
   errorMessage.value = ''
-  successMessage.value = ''
-  
-  if (!adminEmail.value || !adminPassword.value) {
-    errorMessage.value = 'Email dan password admin wajib diisi!'
-    return
-  }
-
   loading.value = true
   try {
-    const result = await signInWithEmailAndPassword(auth, adminEmail.value, adminPassword.value)
-    console.log('Admin masuk:', result.user.email)
-    
-    successMessage.value = 'Login Admin sukses!'
-     setTimeout(() => router.push('/admin-dashboard'), 1000)
-    
+    await signInWithEmailAndPassword(auth, adminEmail.value, adminPassword.value)
+    router.push('/admin-dashboard')
   } catch (error) {
-    errorMessage.value = 'Kredensial Admin salah atau tidak terdaftar!'
+    errorMessage.value = 'Kredensial Admin salah!'
   } finally {
     loading.value = false
   }
