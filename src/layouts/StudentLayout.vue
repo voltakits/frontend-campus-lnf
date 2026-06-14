@@ -37,7 +37,7 @@ const formatDate = (dateString) => {
 // Biar setiap layout ini dimuat (termasuk pas refresh), riwayat selalu ditarik
 const fetchMyReports = async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/lost-reports/my-reports', {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/lost-reports/my-reports`, {
       credentials: 'include' 
     })
     const data = await res.json()

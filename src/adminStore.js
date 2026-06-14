@@ -20,8 +20,5 @@ export const fetchAdminData = async () => {
     }
 };
 
-// 3. Panggil pertama kali saat web dibuka
-fetchAdminData();
 
-// 4. Bikin mesin Real-Time: Auto-refresh tiap 3 detik di background!
-setInterval(fetchAdminData, 3000);
+

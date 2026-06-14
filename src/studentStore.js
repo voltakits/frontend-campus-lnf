@@ -40,8 +40,3 @@ export const fetchMyNotifications = async () => {
     }
 };
 
-// Auto-refresh keduanya tiap 3 detik!
-setInterval(() => {
-    fetchMyReports();
-    fetchMyNotifications();
-}, 3000);
