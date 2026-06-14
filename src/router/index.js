@@ -30,12 +30,12 @@ const routes = [
   { 
     path: '/lapor-barang', 
     name: 'LaporBarang',
-    component: () => import('../views/LaporBarang.vue') // Pastikan huruf L dan B besar sesuai nama file lu
+    component: () => import('../views/LaporBarang.vue') 
   },
   { 
     path: '/admin-verifikasi', 
     name: 'AdminVerifikasi',
-    component: () => import('../views/AdminVerifikasi.vue') // Pastikan huruf L dan B besar sesuai nama file lu
+    component: () => import('../views/AdminVerifikasi.vue') 
   },
 
   {
