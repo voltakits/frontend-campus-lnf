@@ -4,12 +4,12 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 // Ganti nilai ini dengan config dari dashboard Firebase lu
 const firebaseConfig = {
-  apiKey: "AIzaSyCAEqQXkG-MxPgGkWH2sv_maqqxZw-cdcdefcvfef10F8",
-  authDomain: "campus-lost-and-found-9b3c9.firecdjcjdnjndcbaseapp.com",
-  projectId: "campus-lost-and-foun cjdbcjdcjd-9b3c9",
-  storageBucket: "campus-lost-and-foundcdcdjcnjd-9b3c9.firebasestorage.app",
-  messagingSenderId: "931209671 cdcjdn32",
-  appId: "1:93120967132:web:183e9 cdjcndcdjjba1bdc61bb82a1f19"
+  apiKey: "AIzaSyCAEqQXkG-MxPgGkWH2sv_maqqxZw-10F8",
+  authDomain: "campus-lost-and-found-9b3c9.firebaseapp.com",
+  projectId: "campus-lost-and-found-9b3c9",
+  storageBucket: "campus-lost-and-found-9b3c9.firebasestorage.app",
+  messagingSenderId: "93120967132",
+  appId: "1:93120967132:web:183e9ba1bdc61bb82a1f19"
 };
 
 // 1. Inisialisasi Firebase App (Cukup 1 kali)
