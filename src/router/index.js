@@ -30,7 +30,7 @@ const routes = [
   { 
     path: '/lapor-barang', 
     name: 'LaporBarang',
-    component: () => import('../views/LaporBarang.vue') 
+    component: () => import('../views/LaporBarangFix.vue') 
   },
   { 
     path: '/admin-verifikasi', 
