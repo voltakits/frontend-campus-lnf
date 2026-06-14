@@ -18,7 +18,7 @@ const googleProvider = new GoogleAuthProvider();
 
 // ✅ Gabung jadi SATU setCustomParameters
 googleProvider.setCustomParameters({
-  prompt: 'select_account', // selalu muncul popup pilih akun
+ 
   hd: 'global.ac.id'        // filter hanya akun @global.ac.id
 });
 
